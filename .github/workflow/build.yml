@@ -1,0 +1,35 @@
+name: build
+run-name: Create a new Dockerimage with the content of the pelican static site generator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Metadata action
+        id: meta
+        uses: docker/metadata-action@v4.0.1
+        with:
+          images: cfluegel/website-flgl-tech
+          tags: |
+            type=raw,value=latest
+            type=raw,value={{date 'YYYYMMDD'}}
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: "."
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
