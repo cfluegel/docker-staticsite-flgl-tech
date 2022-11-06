@@ -1,5 +1,5 @@
 name: build
-run-name: Create a new Dockerimage with the content of the pelican static site generator
+run-name: Create a new Dockerimage 
 
 on:
   workflow_dispatch:
